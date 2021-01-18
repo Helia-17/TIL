@@ -45,7 +45,7 @@
 
 - `git add <파일이름>`
   - <파일이름>에 `.`을 입력하면 전체 파일이 추가된다.
-- working directory에 있는 파일을 staging area(INDEX)에 올림
+- working directory에 있는 파일을 staging area(INDEX)에 올림.
 
 
 
@@ -70,5 +70,4 @@
 
 
 
-- 
 - 물결표 (~): 보통 홈을 의미
