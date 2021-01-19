@@ -1,17 +1,16 @@
-# CMD
+# CLI
 
+- 명령줄 인터페이스(Command-Line Interface / Command-Line user Interface / Character User Interface)
+- (쉘 혹은 콘솔으로 부르기도 함)
+- 윈도우에선 CMD, Powershell, 리눅스에선 Terminal
 
+## CMD
 
 ## Git Bash
 
 > ###### 디스플레이
 
 - 파란색으로 표시 : 폴더 이름
-- 폴더가 ```.```으로 시작한다면 숨겨진 폴더.
-- `..`: 상위 폴더, `.`: 현재 폴더(하위 폴더를 포함)
-- `*`: anything. ex)`*.log`
-
-- 명령어와 명령어 사이 띄어쓰기 구분 필요
 
 - Initialized empty Git repository in C:/Users/e~~~e/first-git/.git/
 
@@ -23,22 +22,31 @@
 
 - 너무 길게 나와서 드래그를 내려도 안보인다? -> 방향키로 가능
 
+> 약속
+
+- 폴더가 ```.```으로 시작한다면 숨겨진 폴더.
+- `..`: 상위 폴더, `.`: 현재 폴더(하위 폴더를 포함)
+- `*`: anything. ex)`*.log`
+- 명령어와 명령어 사이 띄어쓰기 구분 필요
+- `pip`: python package manager
+
 > ###### 단축키
 
-- 붙여넣기: shift + ins
-- 복사: ctrl + ins
-- clear: ctrl + L
+- 붙여넣기: Shift + Ins
+- 복사: Ctrl + ins
+- clear: Ctrl + L
+- 특정 상황에서 빠져나가기 : Ctrl + c
 
 | 명령어                                                       |                  기능                   | 비고                                                         |
 | ------------------------------------------------------------ | :-------------------------------------: | ------------------------------------------------------------ |
 | `$ pwd`                                                      |   내가 어디에 있는지 알아내는 명령어    | Print Working Directory                                      |
 | `$ cd`                                                       |       폴더 이동, 더블클릭과 같음        | change directory<br />띄어쓰기 필요<br />`~`: 홈<br />`/`: 루트, 최상위<br />`..`: 상위 폴더<br />`폴더이름/`: 해당 폴더 |
-| `$ clear`                                                    |      단축키 ctrl +L, 내용 다 지움       |                                                              |
+| `$ clear`                                                    |      단축키 Ctrl +L, 내용 다 지움       |                                                              |
 | `$ ls`                                                       |              목록 보여주기              |                                                              |
 | `$ ls -a`                                                    |     (숨긴 목록 포함) 목록 보여주기      | all의 약자. 다 보여주라는 뜻. 숨김 폴더까지 보여짐           |
 | `$ touch test.py `<br />`$ tocuh.test.md`<br />`$ touch a.txt b.txt c.txt` | 파일 생성<br />(파이썬, 마크다운, 다중) | ```$ touch 파일이름.확장자```                                |
 | `$ mkdir test`                                               |                폴더 생성                | ```$ mkdir 폴더이름```                                       |
-| `$ code .`                                                   |  visual studio를 이용해 코드를 열어줌   |                                                              |
+| `$ code .`                                                   |     VS code를 이용해 코드를 열어줌      |                                                              |
 
 ##### add, commit, push
 
@@ -123,36 +131,50 @@
 
 - 거기서 tab을 두번 누르면 이중에 뭘 입력할건지 보여줌
 
-  | 명령어                       |                     |                           |
-  | ---------------------------- | ------------------- | ------------------------- |
-  | $ pip install requests       | requests 설치       | (도구상자 꺼내기)         |
-  | $ pip install beautifulsoup4 | beautifulsoup4 설치 | 인간이 보기위해 번역 작업 |
-  |                              |                     |                           |
+  | 명령어                         |                     |                           |
+  | ------------------------------ | ------------------- | ------------------------- |
+  | `$ pip install requests`       | requests 설치       | (도구상자 꺼내기)         |
+  | `$ pip install beautifulsoup4` | beautifulsoup4 설치 | 인간이 보기위해 번역 작업 |
+  | `$ python 파일명.py`           | 실행                |                           |
 
 
 
 ## jupyter notebook
 
-|      | 단축키      |      |
-| ---- | ----------- | ---- |
-|      | esc / enter |      |
-|      |             |      |
-|      |             |      |
+- REPL(Read Eval Print Loop) : 
+  - 읽고(read), 평가하고(eval), 출력하는(print) 반복(loop)
+  - =CLI위에서 사용
+- 딥러닝, 머신러닝, 데이터 분석 등에서 자주 사용
 
-커널 초기화 : kernel - Restart
+> 초기 설정
 
-목차 생성 확장 프로그램 `$ pip install jupyter_contrib_nbextensions` - Edit - nbextensions config - disable 체크 해제, Table of contents
+`$ pip install notebook`
 
+- 글꼴 설정 : D2Coding Ver 1.3.2
+  크롬 설정 - 모양 - 글꼴 맞춤설정 - 고정폭 글꼴
 
+|                                                          | 단축키        |                                      |
+| -------------------------------------------------------- | ------------- | ------------------------------------ |
+| Command Mode -> Edit Mode<br />Edit Mode -> Command Mode | Esc / Enter   | Command mode (파랑)/ Edit Mode(초록) |
+| 실행                                                     | Shift + Enter |                                      |
+| 위/ 아래에 셀 생성                                       | a/ b          | (above) / (below)                    |
+| 셀 제거                                                  | d             | (delete)                             |
+| 마크다운 문법                                            | m             | 개념을 적을 수 있음                  |
+| Keyboard Shortcuts                                       | h             | (help)                               |
+
+- 커널 초기화 : kernel - Restart
+- (업데이트 중단 - 주피터 다운그레이드 필요)목차 생성 확장 프로그램 `$ pip install jupyter_contrib_nbextensions` - Edit - nbextensions config - disable 체크 해제, Table of contents
 
 ## Typora
 
-|                               |                     |      |
-| ----------------------------- | ------------------- | ---- |
-| 소스코드 화면 / 미리보기 화면 | ctrl + /            |      |
-| 표 삽입                       | ctrl + t            |      |
-| 제목 설정                     | # 또는 ctrl + 1 ~ 6 |      |
-| 코드 입력                     | ``                  |      |
+|                               |                         |      |
+| ----------------------------- | ----------------------- | ---- |
+| 소스코드 화면 / 미리보기 화면 | Ctrl + /                |      |
+| 표 삽입                       | Ctrl + t                |      |
+| 제목 설정                     | # 또는 Ctrl + 1 ~ 6     |      |
+| 코드 입력                     | ``                      |      |
+| 인용구                        | > 또는 Ctrl + Shift + q |      |
+| 목차 보기 / 숨기기            | Ctrl + Shift + L        |      |
 
 
 
