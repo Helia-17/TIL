@@ -47,6 +47,7 @@
 | `$ touch test.py `<br />`$ tocuh.test.md`<br />`$ touch a.txt b.txt c.txt` | 파일 생성<br />(파이썬, 마크다운, 다중) | ```$ touch 파일이름.확장자```                                |
 | `$ mkdir test`                                               |                폴더 생성                | ```$ mkdir 폴더이름```                                       |
 | `$ code .`                                                   |     VS code를 이용해 코드를 열어줌      |                                                              |
+| `$ 명령어 --help`                                            |                 도움말                  |                                                              |
 
 ##### add, commit, push
 
@@ -158,8 +159,11 @@
 | Command Mode -> Edit Mode<br />Edit Mode -> Command Mode | Esc / Enter   | Command mode (파랑)/ Edit Mode(초록) |
 | 실행                                                     | Shift + Enter |                                      |
 | 위/ 아래에 셀 생성                                       | a/ b          | (above) / (below)                    |
-| 셀 제거                                                  | d             | (delete)                             |
+| 셀 제거                                                  | dd            | (delete) - 재확인함                  |
 | 마크다운 문법                                            | m             | 개념을 적을 수 있음                  |
+| 파이썬 입력                                              | y             | (python)                             |
+| 잘라내기                                                 | x             | cut selected cells                   |
+| 실행 취소                                                | z             | undo cell deletion                   |
 | Keyboard Shortcuts                                       | h             | (help)                               |
 
 - 커널 초기화 : kernel - Restart
