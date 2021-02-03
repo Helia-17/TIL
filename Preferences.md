@@ -78,12 +78,13 @@
 | 명령어                                                       | 기능                                     | 부가설명                                                     |
 | ------------------------------------------------------------ | ---------------------------------------- | ------------------------------------------------------------ |
 | `$ git init`                                                 | `(master)` 지정                          | initialize의 약자. 생성하다.<br />''깃아 나 이제 이 파일을 깃으로 관리할거야''<br />`.git` 안에 숨김 폴더로 항목을 생성해 기능할 수 있도록 함. `ls -a`으로 보면 `.git/`을 볼 수 있음<br />주의 : `~`(home)에서 `git init`을 하는 순간 내 모든 홈폴더 내용이 git으로 관리됨 |
+| `$ touch .ignore`                                            | git으로 관리하지 않을 파일 조건 지정     | gitignore.io에서 코드 생성하여 VScode에 붙이기               |
 | `$ rm -r .git/`                                              | `(master)` 해제                          | `git init`의 실행 취소                                       |
 | `$ git status`                                               | 상태 보기                                | `Changes to be committed`:<br />`modified`: 가 초록색 -> commit 가능<br />`modified`: 가 빨강색 -> commit 불가능, add 필요<br />`nothing added to commit`:<br />add 안했을 확률 높음 |
 | `$ get remote add`<br />`$ git remote add origin https://github.com/Helia-17/first-git.git`<br />`$ git remote -v` | 화살표 지정                              | 어떤 곳으로 보낼지 화살표 지정하는 기능<br />보통 1번만 필요 |
 | `$ git remote -v`                                            | 화살표 확인                              | `remote`를 점검하는 경우                                     |
 | `$ git remote remove origin`                                 | 화살표 해제                              | `remote`를 잘못 지정한 경우                                  |
-| `$ git add helloworld.py`<br />`$ git add .`                 | 특정 파일 `add`<br />변경된 파일들 `add` | `add` : git의 sub-command 중 하나                            |
+| `$ git add helloworld.py`<br />`$ git add .`                 | 특정 파일 `add`<br />변경된 파일들 `add` | `add` : git의 sub-commagit and 중 하나                       |
 | `git diff`                                                   | 이전 커밋과 현재 상황을 비교하여 보여줌  | `git diff`로 변화를 보고 `git add .`으로 한번에 `add`하면 편함. |
 | `$ git commit -m "메모내용"`                                 | `commit`                                 | `-m` : message option, 뺄 수 없음<br /><br />`'파일명.확장자 변경사항'`'<br />~로 시작하면 보통 short name 옵션<br />`Author identity unknown<br/>*** Please tell me who you are.`<br />->이름과 이메일을 등록해야 함<br />`Aborting commit due to empty commit message.` -> 메세지를 남겨야 함<br />`nothing to commit, working tree clean`<br />->무대에 아무도 없다는 말. (안올렸거나 이미 `commit`을 했거나) |
 | `$ git config --global user name "Helia"`<br />`$ git config -- global user name "jyk.helia@gmail.com"` | 이름과 이메일 등록                       |                                                              |
@@ -95,6 +96,7 @@
 
 - 필요성 : 계속 필요없는 파일들이 생겨남
 - http://gitignore.io/  - 속성 설정 - 생성 - `$ touch .gitignore`
+- ![gitignore.io](Preferences.assets/image-20210122171604075.png)
 
 
 
