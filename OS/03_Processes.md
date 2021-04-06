@@ -21,7 +21,6 @@
 |         | ← fetch | **( Proccess )** | ← load | 실행파일(a.out) |
 | execute | →       | 메모리           |        | SSD, HDD        |
 
-
 <br>
 
 **프로세스의 구조**
@@ -308,33 +307,6 @@ $ size ./a.out
 
 <br>
 
-### 5. 프로세스간 통신(IPC)
-
-- 프로세스들이 동시에 진행될 때 두가지 상황
-  - independent
-    - 다른 프로세스와 데이터를 공유하지 않고 독립적인 경우
-  - cooperating
-    - 다른 프로세스에 영향을 받거나 영향을 주는 경우
-    - 다른 프로세스와 데이터를 공유하는 프로세스는 협력 프로세스다.
-
-**IPC**
-
-- Inter Process Communication
-- 협력 프로그램에 필요한 IPC 매커니즘
-  - 데이터를 교환할 수 있도록 하는 메커니즘
-    - 즉, 데이터를 서로 주고받을 수 있어야 한다.
-- IPC의 두가지 기본 모델
-  - shared memory
-    - 공유 메모리
-  - message passing
-    - 메시지 전달
-
-![IPC_models](03_Processes.assets/image-20210330224027114.png)
-
-- Communication models. (a) Shared memory. and (b) Message Passing.
-
-<br>
-
 > # Quiz
 
 1. **프로세스의 구조**
@@ -480,9 +452,36 @@ $ size ./a.out
 
 ---
 
+### 5. 프로세스간 통신(IPC)
+
+#### 프로세스간 통신
+
+- 프로세스들이 동시에 진행될 때 두가지 상황
+  - independent
+    - 다른 프로세스와 데이터를 공유하지 않고 독립적인 경우
+  - cooperating
+    - 다른 프로세스에 영향을 받거나 영향을 주는 경우
+    - 다른 프로세스와 데이터를 공유하는 프로세스는 협력 프로세스다.
+
+**IPC**
+
+- Inter Process Communication
+- 협력 프로그램에 필요한 IPC 매커니즘
+  - 데이터를 교환할 수 있도록 하는 메커니즘
+    - 즉, 데이터를 서로 주고받을 수 있어야 한다.
+- IPC의 두가지 기본 모델
+  - shared memory
+    - 공유 메모리
+  - message passing
+    - 메시지 전달
+
+![IPC_models](03_Processes.assets/image-20210330224027114.png)
+
+- Communication models. (a) Shared memory. and (b) Message Passing.
+
 <br>
 
-#### 공유된 IPC 메모리 시스템
+#### Shared-memory 시스템의 IPC
 
 **Producer - Consumer Problem**
 
@@ -494,7 +493,7 @@ $ size ./a.out
 
 
 
-#### shared-memory solution
+**shared-memory solution**
 
 - 생산자와 소비자가 동시에 실행될 수 있도록 버퍼를 사용할 수 있도록 함
   - 생산자는 버퍼를 채우고
@@ -534,14 +533,14 @@ in과 out의 인덱스로 생산자가 in 인덱스에 데이터를 생성, 소�
 
 - 공유메모리를 사용하는 스킴은 두가지가 필요
 - 이러한 프로세스들이 메모리 영역을 공유하는 것
-- 공유 메모리에 액세스하고 조작하기 위한 코드
+- 공유 메모리에 액세스하고 조작하 기 위한 코드
   - application 개발자가 명시적으로 작성해야 한다.
-
-
 
 <br>
 
-#### massage-passing solution
+#### massage-passing 시스템의 IPC
+
+**massage-passing solution**
 
 - 메시지 전달 기능을 통해 서로 통신
 - 운영체제에게 협업을도울 수 있는 Kernel을 만들고 관리하게 한 후, message만 전달
@@ -556,7 +555,7 @@ in과 out의 인덱스로 생산자가 in 인덱스에 데이터를 생성, 소�
 
 ![consumer_of_messagepassing](03_Processes.assets/image-20210330225503221.png)
 
-- communication link
+**communication link**
 
 - 두 프로세스 P와 Q가 소통하기 위해서는, 서로 메시지를 주고받아야 한다.
 - 다양한 구현방식
@@ -569,13 +568,220 @@ in과 out의 인덱스로 생산자가 in 인덱스에 데이터를 생성, 소�
 **메시지 전달의 구현 방식**
 
 - direct
-  - 
+  - 통신하고자하는 각 프로세스가 명시적으로 통신의 송신자와 수신자의 이름을 대는 것
+  - 기초 구성
+    - send(P, message)
+    - receive(Q, message)
+  - 특성
+    - 자동으로 Link들이 생성
+    - Link가 정확히 두 프로세스와 연관되어 있음
+    - 한 쌍의 프로세스 사이에 정확히 한 Link가 존재
+- indirect
+  - 메시지는 mailbox나 port를 통해 송수신된다.
+  - **ports**
+    - mailbox
+    - 추상적 객체로 볼 수 있다
+    - 프로세스가 메시지를 보내거나 받는 저장소
+  - 기초 구성
+    - send(A, message)
+    - receive(A, message)
+  - 특성
+    - 각 프로세스가 a shared mailbox를 가질 때에만 link가 형성된다
+    - link는 두 개 이상의 프로세스와 연관된다
+    - 한 쌍의 프로세스 사이에 다양한 link가 존재할 수 있다.
+      - 각 link는 하나의 mailbox에 대응한다
+
+<br>
+
+**OS가 프로세스에게 제공하는 메커니즘**
+
+- **Create** a new mailbox.
+- **Send and Receive** messages through the mailbox.
+- **Delete** a mailbox.
+
+<br>
+
+**구현을 위한 다른 디자인 옵션**
+
+- blocking or non-blocking : synchronous or asynchronous
+  - synchronous - blocking
+  - asynchronous - non-blocking
+    - 내가 보낸 것을 상대방이 받았는지 확신할 수 없음
+    - 효율적임
+- **blocking send**
+  - 메시지가 수신될 때 까지 송신자는 차단된다.
+- **non-blocking send**
+  - 메시지가 수신되지 않아도 송신자가 송신한다.
+- **blocking receive**
+  - 메시지 수신이 가능할 때 까지 수신자는 차단된다.
+- **non-blocking receive**
+  - 메시지 수신이 유효하든 null 메시지이든 계속 검색한다.
 
 <br>
 
 ### 6. 프로세스간 통신의 실제
 
+#### IPC 시스템의 예시
+
+> POSIX Shared Memory
+>
+> Pipes
+
 <br>
+
+**POSIX Shared Memory**
+
+- Shared Memory:
+- POSIX: Portable Operating System Interface (for uniX)
+- memory-mapped files : 메모리에 매핑시킨 파일을 사용한다
+  - 빠르다
+- 과정
+  1. shared-memory 객체 생성
+     - `fd = shm_open (name, O_CREAT | ORDWR,0666);`
+  2. 객체의 size를 byte로 정해준다
+     - `ftruncate fd , 4096);`
+  3. memory-mapped file 생성
+     - `mmap (0, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd , 0);`
+
+- 예시
+
+  - 송신
+
+    ![image-20210406210353743](03_Processes.assets/image-20210406210353743.png)
+
+  ![image-20210406210411603](03_Processes.assets/image-20210406210411603.png)
+
+  >  송신 : mmap 생성 후 포인터를 옮겨서 글을 쓰고, 또 포인트를 옮기고 글을 쓴다.
+
+  - 수신
+
+    ![image-20210406210752919](03_Processes.assets/image-20210406210752919.png)
+
+    ![image-20210406210801542](03_Processes.assets/image-20210406210801542.png)
+
+    >  shm_open 까지는 같고, mmap 파일을 read 하여 출력한다. shm_unlink를 통해 삭제한다.
+
+```bash
+$ gcc 3.16_shm_producer.c -lrt
+$ gcc 3.16_shm_consumer./shm_consumer
+Hello, Shared Memory!
+$ gcc 3.16_shm_consumer./shm_consumer
+Segmentation Fault
+```
+
+- 한번 더 읽으면 이미 삭제되어 없다고 뜸.
+
+<br>
+
+**Pipes**
+
+- Message Passing
+- One of the earliest IPC mechanisms on UNIX systems.
+- 두개의 프로세스가 통신하는 도구로서 작용
+- 4가지 사항
+  - unidirectional or bidirectional:
+    - 단방향 혹은 양방향 통신
+  - half-duplex or full-duplex:
+    - 반이중 통신 혹은 전이중 통신
+    - 전이중통신 : 송수신을 위해 독립된 회선 사용
+    - 반이중통신 : 한쪽이 송신하는 동안 다른쪽에서 수신, 전송 방향을 교체
+  - 통신중인 프로세스 사이에 relationship이 존재하는 가
+    - parent-child
+  - over a network?
+    - 네트워크를 통해서 통신할 수 있는지(-> socket)
+- 파이프의 두가지 형태
+  - ordinary pipes
+    - 파이프를 생성한 프로세스 바깥에서 접근할 수 없다.
+    - 보통 부모 프로세스가 파이프를 생성하여 생성한 자녀 프로세스와 통신하기 위해 사용
+  - named pipes
+    - 부모관계 없이 접근 가능
+
+<br>
+
+**ordinary pipes**
+
+- producer - writes - write end
+- consumer - reads - read end
+- unidirectional
+  - 단방향, 한방향으로의 통신만 가능
+  - 양방향 통신은 두개의 파이프를 사용
+
+![image-20210406212028915](03_Processes.assets/image-20210406212028915.png)
+
+- UNiIX system에서의 ordinary pipe
+
+  - `pipe(int fd[])`
+  - `fd[0]` : the read end of the pipe
+  - `fd[1]`: the write end
+
+  ![image-20210406212254813](03_Processes.assets/image-20210406212254813.png)
+
+  ![image-20210406212309170](03_Processes.assets/image-20210406212309170.png)
+
+  > folk를 하는 순간 pid가 0보다 크면 부모- write, 작으면 자식-read
+
+<br>
+
+#### 클라이언트-서버 시스템의 통신
+
+- 두가지 전략
+- sockets
+  - 통신을 위한 양 종단을 의미
+  - 32bit, 64bit에 따라 불편함 발생
+- RPCs(Remote Procedure
+  - 네트워크 시스템상의 프로세스 간의 호출을 추상화
+  - 원격에 있는 함수를 호출
+
+<br>
+
+**socket**
+
+- 포트 번호와 연결된 IP 주소로 식별된다.
+
+![image-20210406212840022](03_Processes.assets/image-20210406212840022.png)
+
+<br>
+
+**JAVA의 socket**
+
+- 자바는 socket에 대한 더 쉬운 인터페이스를 제공하고 세가지 소켓이 있다.
+- socket class : connection - oriented (TCP)
+  - 기본적
+- DatagramSocket class : connectionless (UDP)
+- MulticastSocket class : multibple recipients
+
+![image-20210406212957770](03_Processes.assets/image-20210406212957770.png)
+
+- 서버 소켓을 생성. 클라이언트 소켓을 줄 필요가 없음. 6013포트 번호에서 받겠다고 기다리고 있음.
+  - 대기하고 있는 상황이 server.accept()
+  - 정보가 오면 print. (예시에서는 현재 시간)
+  - client(close) 닫음. 메시지 오면 또 서버소켓 생성 (반복, 정해진 포트개수를 초과하면 서버터지는 것)
+
+![image-20210406213337875](03_Processes.assets/image-20210406213337875.png)
+
+- 출력하는 상황. 소켓을 열면 생성한 쪽에서는 일이 끝났고 또 데이터 요청을 기다림
+
+<br>
+
+**RPC (Remote Procedure Call)**
+
+> RMI, COM, DCOM, CORBA, EJB 등 엔터프라이즈 환경에서는 많이 씀
+
+> class 안에 있는 변수들 (class, int, str...) 다 함께 객체 직렬화를 해서 보낸다.  
+
+- 원격 서비스의 전형적인 형태
+- 네트워크 연결된 시스템들간 사용을 위한 proceduure-call mechanism을 추상화
+- 클라이언트가 remote host의 procedure을 발생시킨다.
+  - **프로시저를 로컬로 호출**한다.
+
+- 클라이언트 쪽에 stub을 제공함으로서 통신이 발생하는 디테일을 숨긴다.
+- **stub** 
+  - 클라이언트 측의 스텁은 서버를 찾고 매개 변수를 **mashals**(마샬링)한다.
+  - 스텁이 메시지를 받는다 - 마샬링 된 매개 변수의 압축을 풀고 - 서버에서 절차를 수행
+
+<br>
+
+
 
 
 
@@ -599,17 +805,19 @@ in과 out의 인덱스로 생산자가 in 인덱스에 데이터를 생성, 소�
 
 2. **생산자-소비자 문제, shared memory**
 
-   - 생산자-소비자 문제를 message-passing로 해결하는 방법에 대한 설명으로 가장 옳은 것은?
+   - 생산자-소비자 문제를 shared memory로 해결하는 방법에 대한 설명으로 가장 옳은 것은?
 
-   1) message-passing 방식은 두 개의 프로세스간 통신에서만 사용할 수 있다. 
+   1) 운영체제가 알아서 shared memory의 생성과 소멸을 처리해 주므로, 구현하기가 편하다.
 
-   2) message를 생산자가 소비자에게 직접 전달하는 direct 통신 방식이다. 
+    2) POSIX 표준에서는 shared memory를 지원하지 않는다. 
 
-   3) 메시지의 전송이 완료될 때까지 block되는 send를 사용하면 asynchronous 통신을 할 수 있다. 
+   3) shared memory는 memory-mapped file로만 만들 수 있다.
 
-   4) mailbox(또는 port)를 사용한 message-passing은 indirect 통신을 가능하게 한다.
+   4) 생산자는 공유 버퍼에 메시지를 write()하고, 소비자는 공유 버퍼로부터 read()한다. 
 
-   답 : 
+   답 : 4) 생산자는 공유 버퍼에 메시지를 write()하고, 소비자는 공유 버퍼로부터 read()한다. 
+   
+   
 
 <br>
 
@@ -622,7 +830,13 @@ in과 out의 인덱스로 생산자가 in 인덱스에 데이터를 생성, 소�
    3) 메시지의 전송이 완료될 때까지 block되는 send를 사용하면 asynchronous 통신을 할 수 있다. 
    4) mailbox(또는 port)를 사용한 message-passing은 indirect 통신을 가능하게 한다.
 
-   답 : 
+   답 : 4)
+   
+   1) 메일함에 담아놓는 방식이라 그렇지 않다.
+   
+   2) 직접 전달하지 않는다. 간접.
+   
+   3) block - 동기화
 
 <br>
 
@@ -635,7 +849,9 @@ in과 out의 인덱스로 생산자가 in 인덱스에 데이터를 생성, 소�
    3) ordinary pipe로 양방향 통신을 하기 위해서는 두 개의 파이프를 사용하면 된다. 
    4) ordinary pipe를 사용하는 두 개의 프로세스가 반드시 부모-자식 관계일 필요는 없다.
 
-   답 : 
+   답 : 4)
+   
+   부모-자식 관계를 안하려면 ordinary pipe가 아니라 named pipes
 
 <br>
 
@@ -648,7 +864,9 @@ in과 out의 인덱스로 생산자가 in 인덱스에 데이터를 생성, 소�
    3) IP 주소와 port 번호를 결합하여 하나의 소켓을 특정(identify)할 수 있다. 
    4) 일반적으로 소켓은 connection-oriented (TCP) 용으로만 사용할 수 있다.
 
-   답 : 
+   답 : 3)
+   
+   1번은 RPC의  stub.
 
 <br>
 
