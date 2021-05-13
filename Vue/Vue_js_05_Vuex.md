@@ -177,7 +177,33 @@
 
   - 실제 상태(data)를 변경하지 않음
   - computed와 유사
-    
+
+
+
+#### 그냥 mutations으로만 state를 변경하면 안될까?
+
+- “가능하다” 단, 저장소의 각 프로퍼티(state, getters, mutations, actions)는 각자의 역할이 존재
+- 예를 들어, actions 내부의 로직 활용 시 state를 변경해야 하는 경우가 발생할 때
+  - 직접 바꾼다. → 가능하지만 mutation이 그럼 왜 존재할까?
+- 물론 actions의 로직이 단순한 경우(우리의 todo pjt 처럼) actions를 통해 mutations을 부르고,
+  state를 변경하지 않고 바로 mutation을 호출해 state를 바꾸기도 함
+  - 하지만 이 경우는 Vuex 도입의 적절성을 판단해 볼 필요가 있음
+- 결과적으로 역할에 맞는 활용을 했을 때 Vuex 라이브러리의 효용을 극대화 할 수 있음
+
+
+
+#### Vuex, 언제 사용해야 할까?
+
+- Vuex는 공유된 상태 관리를 처리하는 데 유용하지만, 개념에 대한 이해와 시작하는 비용이 큼
+- 앱이 단순하다면 Vuex가 없는 것이 더 괜찮을 수 있음
+- 그러나 중대형 규모의 SPA를 구축하는 경우 Vuex는 자연스럽게 선택할 수 있는 단계가 오게 됨
+- 즉, 필요한 순간이 왔을 때 사용하는 것을 권장
+
+
+
+"Flux 라이브러리는 안경과 같습니다. 필요할 때 알아볼 수 있습니다.” - Dan Abramov (author of Redux)
+
+
 
 ## Todo app with Vuex
 
@@ -260,7 +286,8 @@ export default new Vuex.Store({
 - TodoForm.vue 생성
   - App.vue에 등록 예정
   - 기본 구조만 만들어줌
-
+- 합칠거라면 해당 내용을 App.vue에 씀.
+  
 - App.vue에 TodoForm.vue와 TodoList.vue 등록 
 
   ```js
@@ -313,7 +340,7 @@ export default new Vuex.Store({
 
 ### 데이터 사용해보기 
 
-- TodoLisft.vue
+- TodoList.vue
 
   - 접근: `$store.state.todos`
 
@@ -922,6 +949,8 @@ var mergedObj = { ...obj1, ...obj2 };
 
 ### Getters : 진행 / 완료된 투두 개수
 
+**getters 하나 더 만들기: 완료된 투두 개수**
+
 - index.js
   - 모듈 위에 작성
   - mutate와 마찬가지로 state도 첫번째에 인자가 옴.
@@ -954,11 +983,255 @@ var mergedObj = { ...obj1, ...obj2 };
     }
   ```
 
-  반복되는 느낌이 들지만 나중엔 없어질 것.
+  반복되는 느낌이 들지만 나중엔 없어질 것. => mapstate
 
 
 
+**getters 하나 더 만들기: 진행중인 투두 개수**
 
+- index.js
+
+  ```js
+      uncompletedTodosCount: function (state) {
+        return state.todos.filter((todo) => {
+          return todo.completed === false
+        }).length
+      }
+  ```
+
+- App.vue
+
+  - computed
+
+  ```js
+      uncompletedTodosCount: function () {
+        return this.$store.getters.uncompletedTodosCount
+      }
+  ```
+
+  - 보여주기
+
+  ```html
+  <h2>Uncompleted Todo: {{ uncompletedTodosCount }}</h2>
+  ```
+
+
+
+## API 레퍼런스
+
+https://vuex.vuejs.org/kr/api/
+
+### 컴포넌트 바인딩 헬퍼
+
+> 상세에서 객체 전개 연산자 확인
+
+### mapState
+
+> computed와 state를 매핑
+
+- `mapState(namespace?: string, map: Array<string> | Object<string | function>): Object`
+
+  Vuex 저장소의 하위 트리를 반환하는 컴포넌트 계산 옵션을 만듭니다. [상세](https://vuex.vuejs.org/kr/guide/state.html#mapstate-헬퍼)
+
+  처음 argument는 string 타입의 namespace가 될 수 있습니다. [상세](https://vuex.vuejs.org/kr/guide/modules.html#헬퍼에서-네임스페이스-바인딩)
+
+  두번째 오브젝트 argument는 함수가 될 수 있습니다. `function(state: any)`
+
+```js
+computed: {
+  localComputed () { /* ... */ },
+  // 이것을 객체 전개 연산자(Object Spread Operator)를 사용하여 외부 객체에 추가 하십시오.
+  ...mapState({
+    // ...
+  })
+}
+```
+
+
+
+### [#](https://vuex.vuejs.org/kr/api/#mapgetters)mapGetters
+
+> computed와 getters 매핑
+
+- `mapGetters(namespace?: string, map: Array<string> | Object<String>): Object`
+
+  getter의 평가된 값을 반환하는 컴포넌트 계산 옵션을 만듭니다. [상세](https://vuex.vuejs.org/kr/guide/getters.html#mapgetters-헬퍼)
+
+  처음 argument는 string 타입의 namespace가 될 수 있습니다. [상세](https://vuex.vuejs.org/kr/guide/modules.html#헬퍼에서-네임스페이스-바인딩)
+
+### [#](https://vuex.vuejs.org/kr/api/#mapactions)mapActions
+
+> computed와 actions 매핑
+
+- `mapActions(namespace?: string, map: Array<string> | Object<string | function>): Object`
+
+  액션을 전달하는 컴포넌트 메소드 옵션을 만듭니다. [상세](https://vuex.vuejs.org/kr/guide/actions.html#컴포넌트-내부에서-디스패치-액션-사용하기)
+
+  처음 argument는 string 타입의 namespace가 될 수 있습니다. [상세](https://vuex.vuejs.org/kr/guide/modules.html#헬퍼에서-네임스페이스-바인딩)
+
+  두번째 오브젝트 argument는 함수가 될 수 있습니다. `function(dispatch: function, ...args: any[])`
+
+### [#](https://vuex.vuejs.org/kr/api/#mapmutations)mapMutations
+
+> computed와 mutations 매핑
+
+- `mapMutations(namespace?: string, map: Array<string> | Object<string | function>): Object`
+
+  변이를 커밋하는 컴포넌트 메소드 옵션을 만듭니다. [상세](https://vuex.vuejs.org/kr/guide/mutations.html#컴포넌트-안에서-변이-커밋하기)
+
+  처음 argument는 string 타입의 namespace가 될 수 있습니다. [상세](https://vuex.vuejs.org/kr/guide/modules.html#헬퍼에서-네임스페이스-바인딩)
+
+  두번째 오브젝트 argument는 함수가 될 수 있습니다. `function(commit: function, ...args: any[])`
+
+### [#](https://vuex.vuejs.org/kr/api/#createnamespacedhelpers)createNamespacedHelpers
+
+- `createNamespacedHelpers(namespace: string): Object`
+
+  namespace가 적용된 컴포넌트 바인딩 helper를 만듭니다. 주어진 namespace가 적용된 `mapState`, `mapGetters`, `mapActions` `mapMutations`들을 가지고 있는 오브젝트를 반환합니다. [상세](https://vuex.vuejs.org/kr/guide/modules.html#헬퍼에서-네임스페이스-바인딩)
+
+
+
+### mapstate 사용하기
+
+- TodoList.vue
+  - 기본적으로 내장이 되어있지않으므로 import
+    - 이 메서드만 쓰겠다는 문법
+
+  ```js
+  import { mapState } from 'vuex'
+  ```
+
+  ```js
+    computed: {
+      // todos: function () {
+      //   return this.$store.state.todos
+      // }
+      ...mapState([
+        'todos',
+      ])
+    }
+  ```
+
+  - state에 todos가 있어서 이를 사용.
+
+
+
+### mapGetters 사용하기
+
+- 컴포넌트 내에서 매핑하고자하는 이름이 getters에 있는 것과 같다면 축약 형태로 작성할 수 있음. 
+
+- App.vue
+
+  - computed부분 반복됨
+
+  ```js
+    computed: {
+      completedTodosCount: function () {
+        return this.$store.getters.completedTodosCount
+      },
+      uncompletedTodosCount: function () {
+        return this.$store.getters.uncompletedTodosCount
+      }
+  ```
+
+  - import하고 바꾸자
+
+  ```js
+  import { mapGetters } from 'vuex'
+  ```
+
+  ```js
+    computed: {
+      ...mapGetters([
+        'completedTodosCount',
+        'uncompletedTodosCount',
+      ])
+    }
+  ```
+
+  
+
+### mapActions 사용하기
+
+- 이름이 같다는 전제하에 컴포넌트와 methods와 action을 매핑
+
+- TodoListItem.vue
+
+  - 전
+
+  ```js
+    methods: {
+       deleteTodo: function () {
+         this.$store.dispatch('deleteTodo', this.todo)
+       },
+       updateTodo: function () {
+         // console.log('수정!')
+         this.$store.dispatch('updateTodo', this.todo)
+       }
+  ```
+
+  - 후
+
+  ```js
+  import { mapActions } from 'vuex'
+  ```
+
+  ```js
+    methods: {
+      ...mapActions([
+        'deleteTodo',
+        'updateTodo',
+      ])
+    }
+  ```
+
+  - 단, 문제는 dispatch로 부를때 뒤의 데이터값이 안넘어감.
+    - 뒤의 인자가 넘어가지 않기 때문에 메서드를 호출할 때 this.todo를 넣어줘야함
+      - 아래쪽은 문자열로 작성되어있어 불가능하기 때문
+
+  ```html
+       <button @click="deleteTodo(todo)">Delete</button>
+  ```
+
+  
+
+  
+
+### 새로고침하면 날아가는 데이터 저장하기
+
+**브라우저의 로컬 스토리지 사용**
+
+- 원래 쿠키나 세션값 저장
+- 원래 코드를 많이 쳐야하는데 기능을 제공함.
+  - 두개 같음
+
+```bash
+$ npm i vuex-persistedstate
+$ npm install --save vuex-persisterdstate
+```
+
+- 플러그인 등록해주어야 함.
+
+  - import 하고 등록
+
+  ```js
+  import createPersistedState from 'vuex-persistedstate'
+  ```
+
+  ```js
+  export default new Vuex.Store({
+    plugins: [
+      createPersistedState(),
+    ],
+    state: {
+      todos: [
+        {
+  ```
+
+- 새로고침해도 사라지지 않음
+- Vue-Application-Storage-Local Storage에서 확인 가능
+  
+  - key값으로 vuex가 들어가있고 오브젝트 형태로 todos가 값으로 들어가 있음.
 
 
 
@@ -973,46 +1246,6 @@ var mergedObj = { ...obj1, ...obj2 };
 초기 코스트가 많이 들어감
 
 > Flux 라이브러리는 안경과 같습니다. 필요할 때 알아볼 수 있습니다.
-
-
-
-
-
-
-
-
-
-> 실습
-
-```js
-$ vue add vuex
-```
-
-
-
-
-
-homework
-
-F 필요할 때 중앙관리를 사용. 반드시는 아님
-
-T mutation이 사용되는 이유
-
-F mutations - commit / action - dispatch
-
-T
-
-
-
-mutation과 action은 역할이 다르고, mutation은 state를 조작하기 위해 만들어졌다.
-
-mutation은 state를 수정하기 위한 것.
-
-action은 mutation을 동작시키기 위한 것이다.
-
-mutation은 동기적으로만 동작하고
-
-action은 동기, 비동기 모두 가능하다.
 
 
 
