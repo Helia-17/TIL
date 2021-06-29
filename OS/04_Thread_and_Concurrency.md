@@ -381,7 +381,9 @@ N:코어의 개수
 
    4) OpenMP는 쓰레드를 미리 생성하여 pool에 저장해 놓기 때문에 thread 생성 시간을 절약한다
 
-   답 : 
+   답 : 4)
+
+   그건 Thread Pools임
 
 <br>
 
