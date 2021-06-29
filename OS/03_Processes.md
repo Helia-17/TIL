@@ -634,6 +634,7 @@ in과 out의 인덱스로 생산자가 in 인덱스에 데이터를 생성, 소�
 - Shared Memory:
 - POSIX: Portable Operating System Interface (for uniX)
 - memory-mapped files : 메모리에 매핑시킨 파일을 사용한다
+  
   - 빠르다
 - 과정
   1. shared-memory 객체 생성
@@ -746,8 +747,10 @@ Segmentation Fault
 
 - 자바는 socket에 대한 더 쉬운 인터페이스를 제공하고 세가지 소켓이 있다.
 - socket class : connection - oriented (TCP)
-  - 기본적
+  - 기본적, 안정성
+  - 데이터 송수신 신호를 받아야만 다음 단계 진행
 - DatagramSocket class : connectionless (UDP)
+  - 실시간 라이브 등에 사용하는 통신방식
 - MulticastSocket class : multibple recipients
 
 ![image-20210406212957770](03_Processes.assets/image-20210406212957770.png)
@@ -767,7 +770,7 @@ Segmentation Fault
 
 > RMI, COM, DCOM, CORBA, EJB 등 엔터프라이즈 환경에서는 많이 씀
 
-> class 안에 있는 변수들 (class, int, str...) 다 함께 객체 직렬화를 해서 보낸다.  
+> class 안에 있는 변수들 (class, int, str...) 다 함께 객체 직렬화(0101...로 변환)를 해서 보낸다.  
 
 - 원격 서비스의 전형적인 형태
 - 네트워크 연결된 시스템들간 사용을 위한 proceduure-call mechanism을 추상화
