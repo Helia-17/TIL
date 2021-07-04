@@ -970,9 +970,365 @@ a``; // 함수호출방법 2
 
 <br>
 
-#### 
+#### 화살표 함수
+
+![image-20210704232723860](node_js_01_background.assets/image-20210704232723860.png)
+
+- add1, add2, add3, add4는 같은 기능을 하는 함수
+  -  add2: add1을 화살표 함수로 나타낼 수 있음
+  -  add3: 함수의 본문이 return만 있는 경우 return 생략
+  -  add4: return이 생략된 함수의 본문을 소괄호로 감싸줄 수 있음
+  - not1과 not2도 같은 기능을 함(매개변수 하나일 때 괄호 생략)
+
+- 다음과 같은 경우 주의
+  ```javascript
+  const obj = (x, y) => {
+      return { x, y }
+  };
+  ```
+
+  ```javascript
+  const obj = (x, y) => ({x, y})
+  ```
+
+- 화살표 함수가 기존 function() {}을 대체하는 건 아님(this가 달라짐)
+
+  - 원래는 this를 받으려면 that으로 내부 스코프에 저장하는 꼼수를 써야 했음
+    - logFriends 메서드의 this 값에 주목
+    - forEach의 function의 this와 logFriends의 this는 다름
+    - that이라는 중간 변수를 이용해서 logFriends의 this를 전달
+
+  ![image-20210704233009176](node_js_01_background.assets/image-20210704233009176.png)
+
+  - 화살표 함수
+    - forEach의 인자로 화살표 함수가 들어간 것에 주목
+    - forEach의 화살표함수의 this와 logFriends의 this가 같아짐
+    - 화살표 함수는 자신을 포함하는 함수의 this를 물려받음
+    - 물려받고 싶지 않을 때: function() {}을 사용
+
+- 권장 사용 방법
+
+  - **this를 쓸거면 function을 쓰고, 아니라면 다 화살표함수로 통일된 사용을 권장**
+    - this를 최대한 안쓰는게 좋긴 함. 물론 아예 안쓸 수는 없음
+
+<br>
+
+#### 구조분해 할당
+
+- = 비구조화 할당
+
+- 변수를 한번에 할당
+
+```javascript
+// 귀찮음
+const example = { a: 123, b: { c: 135, d: 146 } }
+const a = example.a;
+const d = example.b.d;
+
+// 한번에 해결, 키가 같아야
+const { a, b: { d } } = example;
+console.log(a); // 123
+console.log(d); // 146
+```
+
+- 자릿수에 맞춰서 변수를 할당
+  - const [변수] = 배열; 형식
+    - 각 배열 인덱스와 변수가 대응됨
+    - node = array[0], obj = array[1], bool = array[3]
+
+```javascript
+// 귀찮음
+arr = [1, 2, 3, 4, 5]
+const x = arr[0]
+const y = arr[1]
+const z = arr[4]
+
+// 한번에 해결, 자릿수 같아야
+const [x, y, , , z] = arr;
+```
+
+- 많이 하는 실수
+  - var getCandy와 var count에 주목
+    - this가 있을 때 구조분해할당을 할 시 문제가 생김
+    - <u>this는 함수를 호출할 때 어떻게 호출되었냐에 따라 결정되기 때문</u>
+  - candyMachine부터 시작해서 속성을 찾아 들어가야 함
+    - **this가 있는 경우 구조분해할당은 하지 않는 편이 좋다**
+
+![image-20210704235055879](node_js_01_background.assets/image-20210704235055879.png)
+
+<br>
+
+#### 클래스
+
+- 프로토타입 문법을 깔끔하게 작성할 수 있는 Class 문법 도입
+
+  - Constructor(생성자), Extends(상속) 등을 깔끔하게 처리할 수 있음
+
+    - 생성자 함수명은 보통 대문자로 선언
+
+  - 코드가 그룹화되어 가독성이 향상됨
+
+  - 이전
+
+    - 순서대로 생성자 매서드, 스태틱 매서드, 인스턴스 매서드가 따로 되어 있음
+
+      ![](node_js_01_background.assets/image-20210705004645452.png)
+
+      - 상속 구조가 복잡
+
+      ![image-20210705004729043](node_js_01_background.assets/image-20210705004729043.png)
+
+  - 클래스
+
+    - 전반적으로 코드 구성이 깔끔해짐
+      - Class 내부에 관련된 코드들이 묶임(그룹화!)
+      - Super로 부모 Class 호출
+      - Static 키워드로 클래스 메서드 생성
+
+    ![image-20210705005130777](node_js_01_background.assets/image-20210705005130777.png)
+
+    - `class Zero extends Human` 하면 상속이 됨!
+      - `constructor`구조는 같음
+      - `super`로 부모의 함수 스코프 내 부분을 실행시킬 수 있음
+
+    ![image-20210705005134165](node_js_01_background.assets/image-20210705005134165.png)
+
+> 프로토타입 이해가 중요한가?
+>
+> 실무에서 주로 함수기반 구현을 한다면 잘 안쓰겠지만, 클래스기반 구현이라면 프로토타입을 많이 씀.
+>
+> 라이브러리와 프레임워크등을 사용한 타인의 소스를 분석하고 리뷰할 때 프로토타입에 대한 이해가 필요(객체지향으로 구현된 것들)
+
+<br>
+
+#### 프로미스
+
+> 콜백 헬이라고 불리는 지저분한 자바스크립트 코드의 해결책
+>
+> 비동기 코드는 항상 실패할 수 있으므로 성공/실패에 따라 다음 실행할 코드를 다르게 짬.
+
+![image-20210705010952527](node_js_01_background.assets/image-20210705010952527.png)
+
+- 프로미스: 내용이 실행은 되었지만 결과를 아직 반환하지 않은 객체
+
+  - Then을 붙이면 결과를 반환함
+  - 실행이 완료되지 않았으면 완료된 후에 Then 내부 함수가 실행됨
+
+- Resolve(성공리턴값) -> then으로 연결
+  Reject(실패리턴값) -> catch로 연결
+  Finally 부분은 무조건 실행됨
+
+- 필요성
+
+  ```javascript
+  const promise = setTimeoutPromise(3000)
+  
+  console.log('딴짓');
+  console.log('딴짓');
+  console.log('딴짓');
+  console.log('딴짓');
+  iconsole.log('딴짓');
+  console.log('딴짓');
+  iconsole.log('딴짓');
+  
+  promise.then(() => {
+  	지금 할래
+  });
+  
+  ```
+
+- 프로미스의 then 연달아 사용 가능(프로미스 체이닝)
+
+  - then 안에서 return한 값이 다음 then으로 넘어감
+  - return 값이 프로미스면 resolve 후 넘어감
+  - 에러가 난 경우 바로 catch로 이동
+  - 에러는 catch에서 한 번에 처리
+
+  ![image-20210705013546948](node_js_01_background.assets/image-20210705013546948.png)
+
+- findOne, save 메서드가 프로미스를 지원한다고 가정
+
+  - 지원하지 않는 경우 프로미스 사용법은 3장에 나옴
+
+  ![image-20210705013853967](node_js_01_background.assets/image-20210705013853967.png)
+
+- Promise.resolve(성공리턴값): 바로 resolve하는 프로미스
+- Promise.reject(실패리턴값): 바로 reject하는 프로미스
+
+![image-20210705013925207](node_js_01_background.assets/image-20210705013925207.png)
+
+- Promise.all(배열): 여러 개의 프로미스를 동시에 실행
+  - 하나라도 실패하면 catch로 감
+  - allSettled로 실패한 것만 추려낼 수 있음 (최근에 사용)
+
+<br>
+
+#### async/await
+
+> 프로미스를 더 간단하게
+>
+> 상기 프로미스 패턴 코드
+>
+> ![image-20210705014418873](node_js_01_background.assets/image-20210705014418873.png)
+>
+> Async/await으로 한 번 더 축약 가능
+
+- async function의 도입
+  - `async`가 붙어야 함
+  - 순서가 오른쪽에서 왼쪽으로 감
+  - `결과값 = await 프로미스`
+  - 변수 = await 프로미스;인 경우 프로미스가 resolve된 값이 변수에 저장
+  - 변수 await 값;인 경우 그 값이 변수에 저장
+
+![image-20210705014430092](node_js_01_background.assets/image-20210705014430092.png)
+
+-  주의사항
+  ```javascript
+  const promise = new Promise(...)
+                              
+  promise.then((result) => ...)
+  
+  //원래는 이렇게 해야 했는데
+  async function main() { 
+  const result = await promise;
+  }
+  main();
+  
+  //이제는 생략도 가능
+  const result = await promise;
+  
+  //그리고 async 함수에서 return 한것은 
+  async function main() { 
+  const result = await promise;
+  return 'helia';
+  }
+  // 무조건 then으로 받아야 함
+  main().then((name) => ...)
+  // 이렇게도 가능
+  const name = await main()
+  ```
+
+  - 에러 처리를 위해 try catch로 감싸주어야 함
+
+    - 각각의 프로미스 에러 처리를 위해서는 각각을 try catch로 감싸주어야 함
+
+    ```javascript
+    async function main() {
+        try{
+        	const result = await promise;
+            return result;
+        } catch (error) {
+            console.lerror(error)
+        }
+    }
+    ```
+
+  ![image-20210705015524404](node_js_01_background.assets/image-20210705015524404.png)
+
+- 화살표 함수도 async/await 가능
+
+  ![image-20210705015700119](node_js_01_background.assets/image-20210705015700119.png)
+
+- Async 함수는 항상 promise를 반환(return)
+
+  - Then이나 await을 붙일 수 있음.
+
+  ![image-20210705015732072](node_js_01_background.assets/image-20210705015732072.png)
+
+<br>
+
+#### for await of
+
+> await가 then이므로 반복문을 돌리는 것
+
+- 노드 10부터 지원
+- for await (변수 of 프로미스배열) 
+  - resolve된 프로미스가 변수에 담겨 나옴
+  - await을 사용하기 때문에 async 함수 안에서 해야함
+
+![image-20210705020435431](node_js_01_background.assets/image-20210705020435431.png)
 
 ### 03. **프런트엔드** **자바스크립트**
 
+#### AJAX
 
+- 서버로 요청을 보내는 코드
+  - 라이브러리 없이는 브라우저가 지원하는 XMLHttpRequest 객체 이용
+  - AJAX 요청 시 Axios 라이브러리를 사용하는 게 편함.
+  - HTML에 아래 스크립트를 추가하면 사용할 수 있음.
 
+![image-20210705020732846](node_js_01_background.assets/image-20210705020732846.png)
+
+- GET 요청 보내기
+
+  - axios.get 함수의 인수로 요청을 보낼 주소를 넣으면 됨
+  - 프로미스 기반 코드라 async/await 사용 가능.
+    - 남의 서버에 요청을 보내는건 비동기이고, 실패할 가능성을 염두에 두어야 함
+
+  ![image-20210705020852752](node_js_01_background.assets/image-20210705020852752.png)
+  >  axios등의 함수가  promise callback함수를 .지원하는지 어떻게 알아요?
+  >
+  > 알 수가 없으므로 공식문서를 봐야 함.
+
+- POST 요청을 하는 코드(데이터를 담아 서버로 보내는 경우)
+  - 전체적인 구조는 비슷하나 두 번째 인수로 데이터를 넣어 보냄
+
+![image-20210705021004143](node_js_01_background.assets/image-20210705021004143.png)
+
+<br>
+
+#### FormData
+
+- HTML form 태그에 담긴 데이터를 AJAX 요청으로 보내고 싶은 경우
+  - FormData 객체 이용
+- FormData 메서드
+  - Append로 데이터를 하나씩 추가
+  - Has로 데이터 존재 여부 확인
+  - Get으로 데이터 조회
+  - getAll로 데이터 모두 조회
+  - delete로 데이터 삭제
+  - set으로 데이터 수정
+
+![image-20210705021551626](node_js_01_background.assets/image-20210705021551626.png)
+
+- FormData POST 요청으로 보내기
+
+  - Axios의 data 자리에 formData를 넣어서 보내면 됨
+
+  ![image-20210705021615129](node_js_01_background.assets/image-20210705021615129.png)
+
+#### encodeURIComponent, decodeURIComponent
+
+> 아스키코드만 입력하는게 best
+>
+> URI + Component임에 주의
+
+- 가끔 주소창에 한글 입력하면 서버가 처리하지 못하는 경우 발생
+
+  - encodeURIComponent로 한글 감싸줘서 처리
+
+  ![image-20210705021723124](node_js_01_background.assets/image-20210705021723124.png)
+
+- 노드를 encodeURIComponent하면 %EB%85%B8%EB%93%9C가 됨
+
+  - decodeURIComponent로 서버에서 한글 해석
+
+  ![image-20210705021746988](node_js_01_background.assets/image-20210705021746988.png)
+
+<br>
+
+#### data attribute와 dataset
+
+> 공개해도 되는 데이터들만!
+
+- HTML 태그에 데이터를 저장하는 방법
+  - 서버의 데이터를 프런트엔드로 내려줄 때 사용
+  - 태그 속성으로 data-속성명
+  - 자바스크립트에서 태그.dataset.속성명으로 접근 가능
+    - data-user-job -> dataset.userJob
+      - 하이픈 빼고 data빼고 카멜이된다는것 기억하기
+    - data-id -> dataset.id
+  - 반대로 자바스크립트 dataset에 값을 넣으면 data-속성이 생김
+    - dataset.monthSalary = 10000 -> data-month-salary=“10000”
+
+![image-20210705022056760](node_js_01_background.assets/image-20210705022056760.png)
