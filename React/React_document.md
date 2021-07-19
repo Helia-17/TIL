@@ -215,6 +215,7 @@ serviceWorker.unregister();
 ##### public/index.html
 
 - 아이디가 `root`인 div가 위치
+- 리액트 컴포넌트가 렌더링 될 때에는, 렌더링된 결과물이 이 div 내부에 렌더링되는 것
 
 ```html
 <!DOCTYPE html>
@@ -263,14 +264,6 @@ serviceWorker.unregister();
 </html>
 
 ```
-
-
-
-
-
-
-
-
 
 
 
@@ -357,7 +350,12 @@ serviceWorker.unregister();
 
 ## JSX
 
-- 컴포넌트 를 여러가지 파일로 분리해서 저장 할 것이고, 또 이 컴포넌트는 일반 자바스크립트가 아닌 JSX 라는 문법으로 작성
+- 리액트에서 생김새를 정의할 때, 사용하는 문법
+  - `return <div>안녕하세요</div>;`
+- 컴포넌트 를 여러가지 파일로 분리해서 저장 할 때 일반 자바스크립트가 아닌 JSX 라는 문법으로 작성
+  - 얼핏보면 HTML 같이 생겼지만 실제로는 JavaScript
+- 리액트 컴포넌트에서 XML 형식의 값을 반환
+- XML 형태로 코드를 작성하면 babel 이 JSX 를 JavaScript 로 변환을 해줌
 
 - 기존
 
@@ -388,6 +386,258 @@ serviceWorker.unregister();
 - **JSX는 [필수가 아닌 선택사항](https://ko.reactjs.org/docs/react-without-jsx.html)**
 
 - UI 코드를 짤 때 JSX를 쓰는 것이 더 편리
+
+
+
+### JSX 규칙
+
+#### 1. 태그는 꼭 닫혀있어야 한다.
+
+- HTML 에서는 `input` 또는 `br` 태그를 사용 할 때 닫지 않고 사용하기도 하지만, 리액트에서는 그렇게 하면 안됨
+  - `<br><br>` (O), `<br />` (O), `<br>` (x) 
+
+- 태그와 태그 사이에 내용이 들어가지 않을 때에는, **Self Closing 태그** 라는 것을 사용
+  - `<Hello />`
+  - 열리고, 바로 닫히는 태그를 의미
+
+#### 2. 두개 이상의 태그는 무조건 하나의 태그로 감싸져있어야 한다.
+
+- 잘못된 예
+
+```react
+function App() {
+  return (
+    <Hello />
+    <div>안녕히계세요.</div>
+  );
+}
+```
+
+- 바른 예
+
+```react
+function App() {
+  return (
+   {/* 하나의 태그로 감싸서 처리 */}
+    <div> 
+      <Hello />
+      <div>안녕히계세요</div>
+    </div>
+  );
+}
+```
+
+- 불필요하게 div로 감싸야 하는 상황이 있을 것 (table 관련 태그를 작성 할 때에도 내용을 div 같은걸로 감싸기엔 애매)
+
+  - 리액트의 **Fragment** 라는 것을 사용
+
+    ```react
+    function App() {
+      return (
+       {/* 이름이 없는 fragment태그, 개발자도구의 HTML Elements에 나타나지 않음 */}
+        <> 
+          <Hello />
+          <div>안녕히계세요</div>
+        </>
+      );
+    }
+    ```
+
+  - 괄호`()`가 없어도 작동하나 가독성을 위해  괄호 사용 
+
+#### 3. JSX 안에서 Javascript 값 사용할 때에는 {}를 사용한다
+
+- JSX 내부에 자바스크립트 변수를 보여줘야 할 때에는 `{}` 으로 감싸기
+
+```react
+function App() {
+  const name = 'react';
+  return (
+    <>
+      <Hello />
+      {/* 없이하면 문자열 name이 되겠지! */}
+      <div>{name}</div> 
+    </>
+  );
+}
+```
+
+#### 4. style 과 className
+
+##### 인라인스타일의 경우 style의 네이밍은 camelCase로 사용해야한다
+
+```react
+function App() {
+  const name = 'react';
+  const style = {
+    backgroundColor: 'black',
+    color: 'aqua',
+    fontSize: 24, // 기본 단위 px
+    padding: '1rem' // 다른 단위 사용 시 문자열을 사용 ex)'10px'
+  }
+
+  return (
+    <>
+      <Hello />
+      <div style={style}>{name}</div>
+    </>
+  );
+}
+```
+
+- HTML과 `style` 과 CSS class 를 설정 방법이 다름
+- 인라인 스타일은 객체 형태로 작성
+  - `<div style={style}>{name}</div>`
+-  `-` 로 구분되어 있는 이름들은 camelCase 형태로 네이밍
+  - `background-color` -> `backgroundColor`
+
+##### css파일에서 불러올때는 'className=' 으로 설정해야한다.
+
+- App.css
+
+```css
+.gray-box {
+  background: gray;
+  width: 64px;
+  height: 64px;
+}
+```
+
+- App.js
+  - `class=` 가 아닌 `className=` 으로 설정 (camleCase!)
+    - `class=`여도 작동은 하지만 경고가 뜸. 권장하지 않음
+
+```javascript
+import React from 'react';
+import Hello from './Hello';
+import './App.css'; // 불러오는 방법
+
+function App() {
+  const name = 'react';
+  return (
+    <>
+      <Hello />
+      <div className="gray-box"></div>
+    </>
+  );
+}
+```
+
+#### 5. 주석
+
+- JSX 내부의 주석은 `{/* 이런 형태로 */}` 작성
+
+```react
+import React from 'react';
+import Hello from './Hello';
+
+function App() {
+  return (
+      {/* 주석은 화면에 보이지 않습니다 */}
+      /* 중괄호로 감싸지 않으면 화면에 보입니다 */
+      <Hello 
+      />
+  );
+}
+```
+
+- 태그와 클로징 태그에서의 주석 작성
+
+```react
+import React from 'react';
+import Hello from './Hello';
+import './App.css'; // 불러오는 방법
+
+function App() {
+  const name = 'react';
+  return (
+      <Hello 
+      	// 이런식으로 작성하는 주석은 화면에 나타나지 않습니다
+      />
+      <div 
+      	// 여기에도 주석 작성이 가능합니다
+      style={style}>{name}</div>
+  );
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+## Babel
+
+> Babel is a JavaScript compiler.
+>
+> https://bit.ly/2wMpkk2
+>
+> babel이 브라우저가 이해할 수 있는 문법으로 변환해준다. ES6, ES7 등의 최신 문법을 사용해서 코딩을 할 수 있기 때문에 생산성이 향상된다.
+
+JSX 를 비롯한 새로운 자바스크립트 문법들을 사용하기 위해 Babel이라는 도구를 사용
+
+- JSX
+
+```xml
+(
+<div>
+  <b>Hello, </b> <span>React</span>  
+</div>
+)
+```
+
+- javascript
+
+```javascript
+"use strict";
+
+/*#__PURE__*/
+React.createElement("div", null, /*#__PURE__*/React.createElement("b", null, "Hello, "), " ", /*#__PURE__*/React.createElement("span", null, "React"));
+```
+
+`자바스크립트 컴파일러`
+
+- 왜 인터프리터 언어에 컴파일러가 필요하지?
+  -  javascript 로 결과물을 만들어주는 컴파일러
+  -  `소스 대 소스 컴파일러 (transpiler)`
+- 왜 javascript 로 변환하는 과정이 필요할까?
+  - ESNext and Legacy… Legacy…
+    - 새로운 ESNext 문법을 기존의 브라우져에 사용하기 위해서 babel 은 필수적
+  - New Language
+    -  typescript 든 coffeescript 든 javascript 로의 compile 이 필수가 되어야 하며,
+       이를 담당하는게 babel
+- [create-react-app](https://github.com/facebookincubator/create-react-app)에도 기본으로 들어있음
+
+
+
+> #### babel-polyfill?
+>
+> > polyfill은 프로그램이 처음에 시작될 때 현재 브라우저에서 지원하지 않는 함수를 검사해서 각 object의 prototype에 붙여주는 역할을 한다.
+>
+> - 폴리필(polyfill) 은 개발자가 특정 기능이 지원되지 않는 브라우저를 위해 사용할 수 있는 코드 조각이나 플러그인을 의미
+>
+> - 브라우저에서 지원하지 않는 기능들에 대한 호환성 작업을 채워 넣는다고 해서 polyfill
+> - babel 은 이러한 polyfill 을 손쉽게 지원하기 위해 babel-polyfill 기능을 지원
+> - 이미 문법을 컴파일 해서 javascript 로 compile 한다고 했는데… 왜 polyfill 이 필요할까?
+>   - babel 을 사용한다고 최신 함수를 사용할 수 있는 건 아님
+>   - babel 은 문법을 변환하여 javascript 로 변환하는 transpiler 역할만 할 뿐
+>   - polyfill 은 프로그램이 처음에 시작될 때 지원하지 않는 기능들을 추가하는 것
+>   - babel 은 컴파일시에 실행되고 babel-polyfill 은 런타임에 실행되는 것
+>
+> - babel-polyfill을 사용하고 싶다면 별도로 [설정](http://babeljs.io/docs/usage/polyfill/)해줘야
+>
+> #### .babelrc
+>
+> >  [.babelrc](http://babeljs.io/docs/usage/babelrc/) 파일을 프로젝트 root 폴더에 생성하자. plugins와 presets 속성이 중요하다. 위에서 설명했던 각 문법이 하나의 plugin이라고 생각하면 된다. 그리고 preset은 plugin 여러 개가 묶여있는 개념이다. 대표적으로 ES6 문법을 모아놓은 es2015 preset과 react 문법을 모아놓은 react preset이 있다. 사용할 preset을 presets에 추가하고 presets에 속해있는 plugin 외에 추가로 사용하고 싶은 plugin은 plugins에 넣자.
+
+
+
+
 
 ### 실습
 
@@ -444,46 +694,7 @@ npx babel --watch src --out-dir . --presets react-app/prod
 
 "여러가지의 파일을 한개로 결합하기 위해서 Webpack 이라는 도구를 사용"
 
-## Babel
 
-> Babel is a JavaScript compiler.
->
-> babel이 브라우저가 이해할 수 있는 문법으로 변환해준다. ES6, ES7 등의 최신 문법을 사용해서 코딩을 할 수 있기 때문에 생산성이 향상된다.
-
-JSX 를 비롯한 새로운 자바스크립트 문법들을 사용하기 위해 Babel이라는 도구를 사용
-
-`자바스크립트 컴파일러`
-
-- 왜 인터프리터 언어에 컴파일러가 필요하지?
-  -  javascript 로 결과물을 만들어주는 컴파일러
-  - `소스 대 소스 컴파일러 (transpiler)`
-- 왜 javascript 로 변환하는 과정이 필요할까?
-  - ESNext and Legacy… Legacy…
-    - 새로운 ESNext 문법을 기존의 브라우져에 사용하기 위해서 babel 은 필수적
-  - New Language
-    -  typescript 든 coffeescript 든 javascript 로의 compile 이 필수가 되어야 하며,
-      이를 담당하는게 babel
--  [create-react-app](https://github.com/facebookincubator/create-react-app)에도 기본으로 들어있음
-
-#### babel-polyfill?
-
-> polyfill은 프로그램이 처음에 시작될 때 현재 브라우저에서 지원하지 않는 함수를 검사해서 각 object의 prototype에 붙여주는 역할을 한다.
-
-- 폴리필(polyfill) 은 개발자가 특정 기능이 지원되지 않는 브라우저를 위해 사용할 수 있는 코드 조각이나 플러그인을 의미
-
-- 브라우저에서 지원하지 않는 기능들에 대한 호환성 작업을 채워 넣는다고 해서 polyfill
-- babel 은 이러한 polyfill 을 손쉽게 지원하기 위해 babel-polyfill 기능을 지원
-- 이미 문법을 컴파일 해서 javascript 로 compile 한다고 했는데… 왜 polyfill 이 필요할까?
-  - babel 을 사용한다고 최신 함수를 사용할 수 있는 건 아님
-  - babel 은 문법을 변환하여 javascript 로 변환하는 transpiler 역할만 할 뿐
-  - polyfill 은 프로그램이 처음에 시작될 때 지원하지 않는 기능들을 추가하는 것
-  -  babel 은 컴파일시에 실행되고 babel-polyfill 은 런타임에 실행되는 것
-
-- babel-polyfill을 사용하고 싶다면 별도로 [설정](http://babeljs.io/docs/usage/polyfill/)해줘야
-
-#### .babelrc
-
->  [.babelrc](http://babeljs.io/docs/usage/babelrc/) 파일을 프로젝트 root 폴더에 생성하자. plugins와 presets 속성이 중요하다. 위에서 설명했던 각 문법이 하나의 plugin이라고 생각하면 된다. 그리고 preset은 plugin 여러 개가 묶여있는 개념이다. 대표적으로 ES6 문법을 모아놓은 es2015 preset과 react 문법을 모아놓은 react preset이 있다. 사용할 preset을 presets에 추가하고 presets에 속해있는 plugin 외에 추가로 사용하고 싶은 plugin은 plugins에 넣자.
 
 
 
