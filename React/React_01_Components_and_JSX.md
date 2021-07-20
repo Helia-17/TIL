@@ -26,7 +26,7 @@
 
 #### Virtual DOM
 
-![img](React_document.assets/u6YnxUS.png)
+![img](React_01_Components_and_JSX.assets/u6YnxUS.png)
 
 - 정말로 동적인 UI 를 보여주기 위해서 모든걸 다 날려버리고 모든걸 새로 만들게 된다면, 속도가 굉장히 느릴 것
 
@@ -160,7 +160,8 @@ export default App;
 ```javascript
 // 수정 후
 import React from 'react'; // react 불러오기
-import Hello from './Hello'; // 필요한 컴포넌트 불러오기
+// 태그 입력시 자동완성을 통해 자동으로 입력되도록 할 수 있다.
+import Hello from './Hello'; // 필요한 컴포넌트 불러오기.
 
 function App() {
   return (
@@ -351,8 +352,10 @@ serviceWorker.unregister();
 ## JSX
 
 - 리액트에서 생김새를 정의할 때, 사용하는 문법
+  
   - `return <div>안녕하세요</div>;`
 - 컴포넌트 를 여러가지 파일로 분리해서 저장 할 때 일반 자바스크립트가 아닌 JSX 라는 문법으로 작성
+  
   - 얼핏보면 HTML 같이 생겼지만 실제로는 JavaScript
 - 리액트 컴포넌트에서 XML 형식의 값을 반환
 - XML 형태로 코드를 작성하면 babel 이 JSX 를 JavaScript 로 변환을 해줌
@@ -563,14 +566,6 @@ function App() {
 
 
 
-
-
-
-
-
-
-
-
 ## Babel
 
 > Babel is a JavaScript compiler.
@@ -685,8 +680,11 @@ npx babel --watch src --out-dir . --presets react-app/prod
 ```
 
 -  `src/like_button.js`라는 파일을 만들어주면, 감시기가 전처리 되어 브라우저와 호환되는 순수 JavaScript로 구성된 `like_button.js`를 생성 (.min.js도 생성)
-
 - 덤으로 구형 브라우저와의 호환성 문제를 걱정할 필요 없이 클래스와 같은 모던 JavaScript 문법을 쓸 수 있게 함
+-  npx와 npm의 차이
+   -  npx는 필요한 앱을 다운받아 한번만 쓰고 삭제함
+      - 불필요한 메모리 낭비가 없음
+      - 항상 새로 다운받으므로 최신 버전(최신 버전 사용을 유도)
 
 <br>
 
