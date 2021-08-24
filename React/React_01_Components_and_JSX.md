@@ -92,6 +92,10 @@ $ nvm install --lts
 ## 시작하기
 
 ```bash
+$ yarn install
+```
+
+```bash
 $ cd begin-react
 $ yarn start
 ```
@@ -346,6 +350,16 @@ serviceWorker.unregister();
 ```
 
 - 스크립트를 압축하는 절차가 따로 없다면 [이 사이트를 참고해서 설정](https://gist.github.com/gaearon/42a2ffa41b8319948f9be4076286e1f3)
+
+
+
+> React를 사용하는 이유는 컴포넌트들을 만들고 그것들을 재사용하기 위함입니다. 개인적으로는 React와 같은 라이브러리들이 '컴포넌트'라고 부르는 것의 핵심 아이디어는 component보다 template이라는 단어가 더 잘 표현한다고 생각합니다. React를 사용한다는 것은 곧 재사용 가능한 틀(template)을 만들고, 틀로 찍어낼 instance를 커스터마이징 가능하도록 해당 틀에 구멍들(slots)을 뚫고, 인스턴스에 전달되는 props나 인스턴스 내부의 state로 그 구멍들을 채우는 일입니다.
+>
+> 사실 재사용 가능한 컴포넌트를 정의하는 것 따위는 js로도 가능하기에 위 설명은 반쪽짜리도 안 됩니다. React와 같은 라이브러리들의 컴포넌트는 선언적이기에 선호됩니다. 예를 들어 어떤 컴포넌트가 렌더링 값으로 반환하는 html template을 document.createElement("...")나 엘리먼트.innerHTML = "..."이 아닌 html 문법 그대로 사용할 수 있을 뿐만 아니라, template에 삽입할 state/prop값들을 위한 구멍들을 그 template에 선언적으로(`<div>{this.state.msg}</div>`) 정의할 수 있습니다.
+>
+> React와 같은 라이브러리들이 자랑하는 Virtual DOM은 사실 **선언적인 컴포넌트에서 데이터 업데이트 시 절차적 코드와 가까운 성능을 내기 위한 장치**이지, 그것이 절차적 코드보다 빠른 속도를 내도록 하는 것은 아닙니다. React는 class형 컴포넌트의 render함수나 함수형 컴포넌트에서 **반환되는 DOM을 렌더링된 DOM과 비교한 후, 변경점이 존재할 시 Native DOM에 적용**합니다.
+>
+> [출처](https://react.vlpt.us/basic/12-variable-with-useRef.html)
 
 
 
