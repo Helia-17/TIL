@@ -76,7 +76,7 @@
 
 <br>
 
-### URI
+### 1. URI
 
 - Uniform Resource Identifier
 - 통합 자원 식별자
@@ -116,14 +116,48 @@
   - 하지만 헬리아아지트가 다른 곳으로 가더라도 URN을 통해 헬라이아지트라는 것을 식별 가능
   - 즉, 헬리아아지트라는 고유한 이름(URN)은 변함 없음
 
-
+<br>
 
 **URL과 URN**
 
 - URN은 자원의 ID를 정의하고, URL은 자원을 찾는 방법을 제공
 - 따라서 URN과 URL은 상호 보완적
 
+<br>
 
+**URI 구조**
+
+`http://localhost:3000/posts/3`
+
+- `http`: Scheme / Protocol
+- `localhost`: Host
+- `3000`: Port
+- `posts`,`3`: Path
+
+`http://google.com/search?q=http`
+
+- `q=http`: Query
+
+`http://getbootstrap.com/docs/4.1/layout/overview#containers`
+
+- `#containers`: fragment
+
+<br>
+
+**URI 설계 주의사항**
+
+- 밑줄(_)이 아닌 하이픈(-)을 사용
+  - URI의 가독성
+- 소문자 사용
+  - 대소문자에 따라 다른 자원으로 인식하게 됨
+- 파일 확장자는 포함시키지 않음
+
+<br>
+
+**URL과 URI**
+
+- URI는 크게 URL과 URN으로 나눌 수 있지만
+  URN을 사용하는 비중이 매우 적기 때문에 일반적으로 URL은 URI를 통칭하는 말로 사용하기도 함
 
 <br>
 
@@ -135,11 +169,175 @@ PATCH : 자원의 부분 교체, 자원 교체시 일부 필드 필요
 
 <br>
 
-# Django REST Framework
+### 2. HTTP Method
 
-https://www.django-rest-framework.org/
+**HTTP (HyperText Transfer Protocol**
+
+- HTML 문서와 같은 자원들을 가져올 수 있도록 해주는 프로토콜 (규칙, 약속)
+- 웹에서 이루어지는 모든 데이터 교환의 기초
+- 클라이언트 - 서버 프로토콜
+- 요청(requests)
+  - 클라이언트(브라우저)에 의해 전송되는 메시지
+- 응답(responses)
+  - 서버에서 응답으로 전송되는 메시지
+
+- HTTP 특징
+  - 비연결 지향(connectionless)
+    - 서버는 응답 후 접속을 끊음
+  - 무상태(stateless)
+    - 접속이 끊어지면 클라이언트와 서버 간의 통신이 끝나며 상태를 저장하지 않음
 
 <br>
+
+**HTTP Method**
+
+- 자원에 대한 행위
+- 즉, HTTP는 HTTP Method를 정의하여 주어진 자원에 수행하길 원하는 행동을 나타냄
+- 의미론적으로 행위를 규정하기 때문에 '실제 그 행위 자체가 수행됨'을 보장하진 않음
+- HTTP verbs 라고도 함
+
+<br>
+
+**HTTP Method 종류**
+
+- GET
+  - 특정 자원의 표시를 요청하며, 오직 데이터를 받기만 함
+- POST
+  - 서버로 데이터를 전송하며, 서버에 변경사항을 만듦
+- PUT
+  - 요청한 주소의 자원을 수정
+- DELETE
+  - 지정한 자원을 삭제
+
+<br>
+
+**RESTful 철학 예시**
+
+X) GET /articles/1/read/
+
+​	-> GET/ articles/1/
+
+​	URI에 불필요한 정보 (행위 표현)가 포함
+
+<br>
+
+X) GET /articles/1/delete/
+
+​	-> DELETE /articles/1/
+
+​	URI는 자원에 대한 행위는 HTTP method로 표현
+
+<br>
+
+O)
+GET /samsung.com/sec/
+GET /samsung.com/sec/smartphones/
+GET /samsung.com/sec/smartphones/galaxy-s/
+
+<br>
+
+### 3. Representation (표현)
+
+![RESTful_API](13_django_REST_API_framework.assets/image-20210429021241264.png)
+
+**JSON**
+
+```json
+{"key": "value"}
+```
+
+- JavaScript Object Notation
+  - lightweight data-interchange format
+  - 자바스크립트 객체 문법을 따르며, 구조화된 데이터를 표현하기 위한 문자 기반 데이터 포맷
+  - 일반적으로 웹 어플리케이션에서 클라이언트로 데이터를 전송할 때 사용
+  - (자바스크립트 구문에 기반을 두고 있지만 차이점이 있으니 주의)
+
+- 특징
+  - 사람이 읽고 쓰기 쉽고 기계가 파싱(해석 & 분석)하고 만들어 내기 쉬움
+    - 파이썬의 dictionary, 자바스크립트의 object처럼 C계열의 언어가 갖고 있는 자료구조로 쉽게 변환할 수 있는 key-value의 구조로 되어 있음
+  - 자바스크립트가 아니어도 JSON을 읽고 쓸 수 있는 기능이 다양한 프로그래밍 언어 환경에서 지원됨
+
+![JSON](13_django_REST_API_framework.assets/image-20210429081004407.png)
+
+- JSON Parsing in Python
+
+```python
+import requests
+
+URL = 'http://kobis.or.kr/kobisopenapi/webservice/rest..중략..json'
+response = requests.get(URL)
+
+# Dictionary로 Parsing
+data = response.json()
+
+# <class 'dict'>
+print(type(data))
+```
+
+<br>
+
+**REST 핵심 규칙**
+
+1. URI는 정보의 자원을 표현해야 한다
+2. 자원에 대한 (어떠한) 행위는 HTTP Method로 표현한다
+
+
+
+**API Server**
+
+- "프로그래밍을 통해 요청에 RESTful한 방식으로 JSON을 응답하는 서버 만들기"
+- 예시 : KaKao Developers REST API 레퍼런스
+  - 
+
+![API_server](13_django_REST_API_framework.assets/image-20210429082304026.png)
+
+<br>
+
+**HTML 응답에서 JSON 응답으로의 변화**
+
+![HTML](13_django_REST_API_framework.assets/image-20210429082333225.png)
+
+![JSON](13_django_REST_API_framework.assets/image-20210429082345239.png)
+
+<br>
+
+**최종 구현**
+
+![Final](13_django_REST_API_framework.assets/image-20210429082414560.png)
+
+<br>
+
+---
+
+<br>
+
+# Django REST Framework
+
+**DRF**
+
+>  https://www.django-rest-framework.org/
+
+- Web API 구축을 위한 강력한 toolkit를 제공
+- REST framework 개발에 필요한 다양한 기능을 제공
+
+<br>
+
+**Serialization (직렬화)**
+
+- 데이터 구조나 객체 상태를 동일하거나 다른 컴퓨터 환경에 저장하고 나중에 재구성할 수 있는 포맷ㄷㅇ드로 변환하는 과정
+- 예를 들어 DRF의 Serializer는 Django의 Queryset 및 Model Instance와 같은 복잡한 데이터를, JSON, XML등의 유형으로 쉽게 변환할 수 있는 Python 데이터 타입으로 만들어 줌
+- DRF의 Serializer는 Django의 Form 및 ModelForm 클래스와 매우 유사하게 작동
+
+<br>
+
+**Django와의 비교**
+
+|          | Django    | DRF             |
+| -------- | --------- | --------------- |
+| Response | HTML      | JSON            |
+| Model    | ModelForm | ModelSerializer |
+
+<br><br><br><br><br><br><br><br>
 
 ```bash
 $ django-admin startproject drf .
@@ -158,7 +356,7 @@ $ python manage.py startapp articles # settings.py 앱 등록
 from django.urls import path, include
 
 # urlpatterns에 추가
-path('api/v1/', include('article.urls')),
+path('api/v1/', include('articles.urls')),
 ```
 
 ```python
@@ -203,7 +401,7 @@ $ python manage.py migrate
 ```bash
 $ pip install django-seed
 $ pip install djangorestframework
-# settings.py 등록 ('django-seed', 'rest_framework',)
+# settings.py 등록 ('django_seed', 'rest_framework',)
 ```
 
 (전역에 한번도 설치를 안했어서 자동완성 쓰기위해)
@@ -353,7 +551,7 @@ def article_detail(request, article_pk)
 def article_list(request):
     if request.method == 'GET':
         articles = get_list_or_404(Article)
-        serializer = ArticleListSerializer(articles, many=True) # form의 역할을 대체, 복수임을 알림
+        serializer = ArticleListSerializer(rticles, many=True) # form의 역할을 대체, 복수임을 알림
         return Response(serializer.data)
     elif request.method == 'POST': # 보통 유효성검사를 고려했었던 것과 달리 HTML을 보내는게 아니기 때문에 유효하지 않은 데이터라는 것만 알려주면 될 것.
         serializer = ArticleListSerializer(data=request.data)
@@ -379,13 +577,13 @@ def article_list(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=400) # 유효하지않은 것도 보여주기 위해
    
 # 두번째 방법
         if serializer.is_valid(raise_exception=True): # 이 옵션이 밑의 줄과 똑같이 에러를 보여줌
             serializer.save()
             return Response(serializer.data)
-        # return Response(serializer.errors, status=400) # 유효하지않은 것도 보여주기 위해
+        # return Response(serializer.errors, status=400) 
 ```
 
 
@@ -662,4 +860,3 @@ class ArticleSerializer(serializers.ModelSerializer):
     "created_at": "1973-01-28T16:26:04Z"
 }
 ```
-

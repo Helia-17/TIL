@@ -470,6 +470,8 @@ export default { // default : 이름을 짓지 않겠다
   - 추가 인자는 리스너의 콜백 함수로 전달
 - 부모 컴포넌트는 자식 컴포넌트가 사용되는 템플릿에서 v-on을 사용하여
   자식 컴포넌트가 보낸 이벤트를 청취 (v-on을 이용한 사용자 지정 이벤트)
+  - v on 디렉티브는 해당 요소 또는 컴포넌트에서 특정 이벤트 발생 시 전달받은 함수
+    를 실행한다
 
 
 
@@ -844,9 +846,11 @@ export default {
 
 
 
-> 실습, 처음부터 vue router 추가
+# 실습
 
-**점심메뉴 추천 페이지**
+- 처음부터 vue router 추가
+
+## **점심메뉴 추천 페이지**
 
 ```bash
 $ vue create my-second-vue-app
@@ -877,7 +881,7 @@ $ vue add router
   </style>
   ```
 
-- router/index.js
+- `router/index.js`
 
 ```vue
 import Vue from 'vue'
@@ -907,7 +911,7 @@ export default router
 
 - Home과 About 컴포넌트, HelloWorld컴포넌트는 사용하지 않으므로 삭제
 
-- App.vue
+- `App.vue`
 
 ```vue
 <template>
@@ -926,9 +930,11 @@ export default router
 $ npm i --save lodash
 ```
 
+- `npm i lodash`도 가능, `--save`는 package.json의 dependecies에 기록될지말지임.
+
 ```vue
 <script>
-import _ from _'lodash'
+import _ from 'lodash'
 export default {
   name: 'TheLunch',
   data: function () {
@@ -949,11 +955,11 @@ export default {
 
 
 
-**로또 페이지**
+## **로또 페이지**
 
-- views에 TheLotto.vue 추가
+- views에 `TheLotto.vue` 추가
 
-- router/index.js에서 import, routes에 추가
+- `router/index.js`에서 import, routes에 추가
 
   ```vue
   import TheLotto from '@/views/TheLuotto.vue'
@@ -1021,11 +1027,11 @@ export default {
 
 
 
-**다이나믹 라우팅 매칭** (동적 인자 전달)
+### **다이나믹 라우팅 매칭** (동적 인자 전달)
 
 >  lotto/10/이면 10개만큼 뽑아주는 기능
 
-- index.js의 routes path 변경
+- `index.js`의 routes path 변경
 
 ```javascript
   {
@@ -1035,7 +1041,7 @@ export default {
   }
 ```
 
-- TheLotto.vue에서 바뀐 접근
+- `TheLotto.vue`에서 바뀐 접근
 
 ```vue
 <template>
@@ -1062,11 +1068,11 @@ export default {
 
 
 
-> ### 실습
+# 실습2 - TODO
 
 **전체 형태 잡기**
 
-1. index.js routes 생성
+1. `index.js` routes 생성
    - 주의 : `path: '/create',`) 
 2. views 에서 vue 파일 만들기
 
@@ -1145,8 +1151,9 @@ export default {
 ```
 
 - `    <TodoItem v-for="(todo, idx) in todos" :key="idx"/>`
-  - 반복작업을 시켜보자
-
+  
+- 반복작업을 시켜보자
+  
 - 변수 이름과 변수로 데이터속성을 넣어줌
 
   `<TodoItem v-for="(todo, idx) in todos" :key="idx" :todoData="todo"/>`
@@ -1239,25 +1246,160 @@ export default {
 
 - index.vue에서 prop가져오기
 
-  ```vue
-  <script>
-  import TodoItem from '@/components/TodoItem.vue'
-  
-  export default {
-    name: 'Index',
-    components: {
-      TodoItem
-    },
-    data: function () {
-      return {
-  
-      }
-    },
-    props: {
-      todos: Array
+```vue
+<script>
+import TodoItem from '@/components/TodoItem.vue'
+
+export default {
+  name: 'Index',
+  components: {
+    TodoItem
+  },
+  data: function () {
+    return {
+
+    }
+  },
+  props: {
+    todos: Array
+  }
+}
+</script>
+```
+
+
+
+
+
+**PROP  흐름** 정리
+
+- App.vue
+
+```vue
+<template>
+  <div id="app">
+    <div id="nav">
+      <router-link to="/">Index</router-link> |
+      <router-link to="/create">Create</router-link>
+    </div>
+    <!-- 2. 자식에게 넘겨줌 -->
+    <router-view :todos="todosApp"/>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+  data: function () {
+    return {
+      // 1. 부모 데이터
+      todosApp: [
+        {content: '공부하기', isCompleted: false},
+        {content: '저녁먹기', isCompleted: true}
+      ]
     }
   }
-  </script>
-  ```
+  }
+</script>
+```
 
-  
+- Index.vue
+
+```vue
+<template>
+  <div>
+    <h1>index입니다</h1>
+    <!-- 4. 데이터 사용 -->
+    <TodoItem v-for="(todo, idx) in todos" :key="idx" :todo-data="todo"/>
+  </div>
+</template>
+
+<script>
+import TodoItem from '@/components/TodoItem.vue'
+
+export default {
+  name: 'Index',
+  components: {
+    TodoItem
+  },
+  data: function () {
+    return {
+
+    }
+  },
+  // 3. 데이터 받기
+  props: {
+    todos: Array
+  }
+}
+</script>
+```
+
+
+
+**create도 prop 받기**
+
+- 이벤트 설정, 이벤트 시 실행할 메서드 설정
+
+```vue
+<input type="text" v-model="userInput" @keyup.enter="addTodo">
+```
+
+- 메서드 작성
+  - 먼저 `console.log(this.userInput)` 찍어볼것.
+  - `this.$emit('add-todo', this.userInput)`: 
+    - 케밥케이스
+    - 데이터를 같이 인자로 넘겨줌
+- .App.vue에서 이벤트 받기
+  - addTodo가 실행되면 createTodo를 실행할게!
+  - router로 이어지지 않아도 데이터 교환 가능. 컴포넌트면 규칙에 맞게 입력하면 됨.
+
+```vue
+<template>
+
+	<router-view :todos="todosApp" @add-todo="createTodo"/>
+
+</template>
+
+<script>
+    
+  methods: {
+    createTodo: function(input) {
+      // console.log(input)
+      const todo = {
+        content: input,
+        isCompleted: false
+      }
+      
+      this.todosApp.push(todo)
+    }
+  }
+    
+</script>
+```
+
+- 정리
+
+  1. `@keyup.enter="addTodo"`
+  2. `this.$emit('add-todo')`
+
+  3. `@add-todo="createTodo"`
+  4. `createTodo: function() {`
+
+- Create.vue에서 데이터 보내준 뒤 인풋창 공백처리
+
+```vue
+<script>
+
+  methods: {
+    addTodo: function () {
+      this.$emit('add-todo', this.userInput)
+      // console.log(this.userInput)
+      this.userInput = ''
+      
+    }
+  }
+    
+</script>
+```
+

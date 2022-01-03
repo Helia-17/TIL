@@ -92,6 +92,7 @@
 
    - 웹페이지의 제목 조회, 변경 가능
    - 버튼 클릭 시 프린트 함수 실행되도록 가능 등
+   - 자바스크립트도 객체지향언어이므로 .을 찍어서 접근
 
 2. BOM
 
@@ -173,6 +174,8 @@ window.document
   1. 선택(select)
   2. 변경(manipulation)
 
+![select_manipulation](01_JS_Intro_DOM.assets/image-20210429005115318.png)
+
 <br>
 
 **DOM 조작 - Document 위치**
@@ -204,20 +207,20 @@ window.document
 
 **DOM 선택 - 선택 관련 메서드**
 
-- Document**.querySelector()**
+- `Document.querySelector()`
   - 제공한 선택자와 일치하는 element 하나 선택
   - 제공한 CSS selector를 만족하는 첫번째 element 객체를 반환 (없다면 null)
-- Document.**querySelectorAll()**
+- `Document.querySelectorAll()`
   - 제공한 선택자와 일치하는 여러 element를 선택
   - 매칭할  하나 이상의  셀렉터를 포함하는 유효한 CSS selector를 인자(문자열)로 받음
   - 지정된 셀렉터에 일치하는 NodeList를 반환
-- getElementById()
-- getElementByTagName()
-- getElementByClassName
+- `getElementById()`
+- `getElementByTagName()`
+- `getElementByClassName`
 
 => 이 세개는 잘 사용하지 않음. 읽을 줄만 알자!
 
-- 우리가 querySelector(), querySelectorAll()을 사용하는 이유
+- 우리가 `querySelector()`, `querySelectorAll()`을 사용하는 이유
   - id, class 그리고 tag 선택자 등을 모두 사용가능하기 때문에 더 구체적이고 유연하게 선택 가능
 
 <br>
@@ -225,13 +228,13 @@ window.document
 **DOM 선택 - 선택 메서드별 반환 타입**
 
 - 단일 element
-  - getElementById()
-  - querySelector()
+  - `getElementById()`
+  - `querySelector()`
 - HTMLCollection (live collection)
-  - getElementsByTagName()
-  - getElementByClassName()
+  - `getElementsByTagName()`
+  - `getElementByClassName()`
 - NodeList(static collection)
-  - querySelectorAll()
+  - `querySelectorAll()`
 
 <br>
 
@@ -256,39 +259,120 @@ window.document
   - 예시) HTMLCollection, NodeList
 - Static Collection (non-live)
   - DOM이 변경되어도 collection 내용에는 영향을 주지 않음
-  - querySelectorAll()의 반환 NodeList만 static
+  - `querySelectorAll()`의 반환 NodeList만 static
 
 <br>
 
 **DOM 변경 - 변경 관련 메서드**
 
-- Document**.createElement()**
+- `Document.createElement()`
   - 주어진 태그명을 사용해 HTML 요소를 만들어 반환 =
-- ParentNode.**append()**
+- `ParentNode.append()`
   - 특정 부모 노드의 자식 노드 리스트 중 마지막 자식 다음에 Node 객체나 DOMString을 삽입 (반환값 없음)
   - **여러 개**의 Node 객체, DOM String을 추가 할 수 있음
-- Node.**appendChild()**
+- `Node.appendChild()`
   - **한 노드**를 특정 부모 노드의 자식 노드 리스트 중 마지막 자식으로 삽입(Node만 추가 가능)
   - 만약 주어진 노드가 이미 문서에 존재하는 다른 노드를 참조한다면 새로운 위치로 이동
-- ChildNode.remove()
+- `ChildNode.remove()`
   - 이를 포함하는 트리로부터 특정 객체를 제거
-- Node.removeChild()
+- `Node.removeChild()`
   - DOM에서 자식 노드를 제거하고 제거 된 노드를 반환
   - Node는 인자로 들어가는 자식 노드의 부모 노드
 
-
+<br>
 
 **remove() vs removeChild()**
 
+```javascript
+// remove()
+// id가 'content'인 태그를 제거
+let el = document.querySelector('#content')
+el.remove()
+
+// removeChild()
+// 부모 노드를 알 때 지정된 자식 요소를 제거
+let parent = document.querySelector('#parent')
+let child = document.querySelector('#child')
+let oldChild = parent.removeChild(child)
+```
+
 <br>
 
----
+**DOM 변경 - 변경 관련 속성 (property)**
+
+- `Node.textContent`
+  - 노드와 그 자손의 텍스트 컨텐츠(DOMString)를 표현 (해당 요소 내부의 raw text)
+  - 노드의 모든 요소 컨텐츠를 가져옴
+- `Node.innerText`
+  - textContent와 동일하지만 raw text가 최종적으로 렌더링 된 모습을 표현 (사람이 읽을 수 있는 요소만 남김)
+  - 즉, 줄 바꿈을 인식하고 숨겨진 내용을 무시하는 듯 최종적으로 스타일링이 적용 된 모습으로 표현
+- `Element.innerHTML`
+  - 요소(element) 내에 포함 된 HTML 마크업을 반환
+  - XSS공격에 취약점이 있으므로 사용시 주의
+- `Element.setAttribute(name, value)`
+  - 지정된 요소의 값을 설정
+  - 속성이 이미 존재하면 값을 업데이트, 그렇지 않으면 지정된 이름과 값으로 새 속성 추가
+- `Element.getAttribute()`
+  - 해당 요소의 지정된 값(문자열)을 반환
+  - 인자는 값을 얻고자 하는 속성의 이름
 
 <br>
 
-자바스크립트도 객체지향언어이므로 .을 찍어서 접근
+**XSS (Cross-site scripting**
 
- 
+- 공격자가 웹 사이트 클라이언트 측 코드에 악성 스크립트를 삽입해 공격하는 방법
+- 이 코드의 실행은 피해자가 하며 공격과 액세스 제어를 우회하고 사용자를 가장 할 수 있도록 함 (csrf 공격과 유사)
+- 예시
+  - 게시판이나 메일 등 악성 자바스크립트 코드를 삽입 해 개발자가 고려하지 않는 기능이나 공격이 작동
+  - 공격에 성공하면 사용자의 쿠키나 세션 등 민감한 정보를 탈취
+
+<br>
+
+**innerText vs innerHTML**
+
+```javascript
+ulTag.innerText = '<li>춘천</li>'
+ulTag.innerHTML = '<li>춘천</li>'
+```
+
+웹페이지에 innerText는 `<li>춘천</li>` 그대로 뜨지만 innerHTML은 `춘천`으로 뜸 
+
+<br>
+
+**DOM 변경 예시**
+
+```javascript
+const newLiTag = document.createElement('li') // undefined
+newLiTag.innerText = '춘천'
+newLiTag // <li>춘천</li>
+const ulTag = document.querySelector('ul') // undefined
+ulTag.appendChild(newLiTag)
+ulTag
+/* 
+<ul>
+    <li class="location">...</li>
+    <li class="location">...</li>
+    <li class="location">...</li>
+    <li class="location">...</li>
+    <li>
+        ::marker
+        "춘천"
+    </li>
+</ul>
+*/
+ulTag.removeChild(newLiTag) // <li>춘천</li>
+```
+
+```javascript
+const h1 = document.querySelector('h1')
+h1.textContent = 'Goodbye Helia'
+h1.style.backgroundColor = 'red'
+const h2 = document.querySelector('h2')
+h2.getAttribute('id') // 'location-header'
+h2.setAttribute('class, 'location')
+```
+
+<br>
 
 주석
 
@@ -311,15 +395,15 @@ window.document
 
 > 다양한 이벤트 유형 https://developer.mozilla.org/en-US/docs/Web/Events
 
-- 네트워크 활동 혹은 사용자와으 상호작용 같은 사건의 발생을 알리기 위한 객체
+- 네트워크 활동 혹은 사용자와의 상호작용 같은 사건의 발생을 알리기 위한 객체
 - 이벤트는 마우스를 클릭하거나 키보드를 누르는 등 사용자 행동에 의해 발생할 수도 있고,
   특정 메서드를 호출(HTMLElement.click()하여 프로그래밍적으로도 만들어 낼 수 있음)
 - 이벤트 처리기(Event-handler)
-  - **EventTarget.addEventListener()**
+  - **`EventTarget.addEventListener()`**
   - 해당 메서드를 통해 다양한 요소에서 이벤트를 붙일 수 있음
-  - removeEventListener()를 통해 이벤트를 제거 가능
+  - `removeEventListener()`를 통해 이벤트를 제거 가능
 
-
+<br>
 
 **Event 기반 인터페이스**
 
@@ -329,7 +413,7 @@ window.document
   - Event의 상속을 받음
   - MouseEvent, KeyboardEvent, InputEvent, FocusEvent 등의 부모 객체 역할을 함
 
-
+<br>
 
 **Event가 필요한 이유**
 
@@ -338,19 +422,19 @@ window.document
 - "클릭하면 경고 창을 띄운다."
 - "특정 이벤트가 발생하면 할 일을 등록한다."
 
-
+<br>
 
 **Event handler**
 
-- `EventTarget.**addEventListener()**
+- `EventTarget.addEventListener()`
 - 지정한 이벤트가 대상에 전달될 때마다 호출할 함수를 설정
 - 이벤트를 지원하는 모든 객체(Element, Document, Window 등)를 대상으로 지정 가능
-- target.addEventListenr(type, listenr[, options])
+- `target.addEventListenr(type, listenr[, options])`
 - type: 반응 할 이벤트 유형(대소문자 구분 문자열)
 - listener: 지정된 타입의 이벤트가 발생 했을 때 알림을 받는 객체
 - EventListener 인터페이스 혹은 JS function 객체(콜백 함수)여야 함
 
-
+<br>
 
 ```python
 # 파이썬
@@ -375,17 +459,17 @@ hello()
 ```
 
 - : 대신 {}
-- print() 대신 console.log()
+- `print()` 대신 `console.log()`
 - 함수를 변수에다 저장해서 쓸 수도 있음. => 함수는 모두 1급 객체
   - 변수로 사용이 가능하다면 인자로 넣을 수 있다.
 
-
+<br>
 
 **call back function**
 
 - 파이썬
-  - ex) `path('<str:username>/', views.profile, name=profile)
-  - path라는 함수 안에서 views.profile이라는 함수가 연결되어 실행, 이를 call back이라고 함.
+  - ex) `path('<str:username>/', views.profile, name=profile)`
+  - path라는 함수 안에서 `views.profile`이라는 함수가 연결되어 실행, 이를 call back이라고 함.
 - 자바스크립트
   - javascript 아래 call back function은 인자가 두개
     - 하나는 'click',  하나는 event라는 함수
@@ -398,7 +482,7 @@ btn.addEventListner('click', function (event){
 
 ```
 
-
+<br>
 
 > 복습
 >
@@ -406,7 +490,7 @@ btn.addEventListner('click', function (event){
 >
 > - Event Listenr를 가질 수 있는 객체가 구현하는 DOM 인터페이스
 
-
+<br>
 
 **addEventListenr**
 
@@ -424,11 +508,9 @@ btn.addEventListner('click', function (event){
 
 (버튼을 클릭하면, alert를 하겠다)
 
+<br>
 
-
-
-
-> # 실습
+# 실습
 
 ## 이벤트 발생
 

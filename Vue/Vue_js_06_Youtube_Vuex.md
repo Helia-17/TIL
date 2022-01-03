@@ -40,8 +40,9 @@ $ npm i
 
 
 - VideoListItem.vue
-  - ` name: 'VideolistItem'`
-
+  
+- ` name: 'VideolistItem'`
+  
 - VideoList.vue와 연결
 
   - `import VideoListItem from '@/components/VideoListItem'`
@@ -354,8 +355,9 @@ $ npm i
     - state에 저장
 
 - VideoDetail.vue 생성, 이름설정
-  - 필요한것만 연산을 해서 보여줄 수 있도록 getters 작성
-
+  
+- 필요한것만 연산을 해서 보여줄 수 있도록 getters 작성
+  
 - index.js
 
   - getters
@@ -465,7 +467,7 @@ $ npm i
 
   - `  <VideoDetail/>`
 
-  - ```js
+  - ```bbootstrapjs
       components: {
         VideoSearchBar,
         VideoList,

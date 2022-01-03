@@ -59,5 +59,5 @@ V React Native CLI
 
 - nvm : node.js의 버전 관리자인 동시에 node.js를 설치하는 툴. node.js를 직접 설치할 수 도 있지만 os에 특정 버전의 node.js를 설 치하면 여러 버전의 node.js를 설치해야할 경우 대응이 불가능. nvm은 하나의 시스템
 
-Installation 02
+### Installation 02
 

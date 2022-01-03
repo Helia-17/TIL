@@ -61,6 +61,7 @@
 
 - 이미지 파일 위치 - `articles/static/articles/images/`
 - static file 기본 경로
+  
   - `app_name/static/`
 
 <br>
@@ -178,9 +179,10 @@
 **`FileField` / `ImageField` 를 사용하기 위한 몇 가지 단계**
 
 1. setting.py에 `MEDIA_ROOT`, `MEDIA_URL` 설정
-2. `upload_to` 속성을 정의하여 업로드 된 파일에 사용할 `MEDIA_ROOT`의 하위 경로를 지정
+
+1. `upload_to` 속성을 정의하여 업로드 된 파일에 사용할 `MEDIA_ROOT`의 하위 경로를 지정
    - upload_to는 optional argument
-3. 업로드 된 파일의 상대 URL은 django가 제공하는 `url` 속성을 통해 얻을 수 있음
+2. 업로드 된 파일의 상대 URL은 django가 제공하는 `url` 속성을 통해 얻을 수 있음
 
 <br>
 

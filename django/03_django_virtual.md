@@ -68,9 +68,15 @@
   ```
 
 - 삭제
+  
   - 비활성화 후 venv 폴더 삭제
 - README.md
+  
   - 파이썬 버전 명시
+
+<br>
+
+- 장고 설치 `pip install django`
 
 <br>
 
